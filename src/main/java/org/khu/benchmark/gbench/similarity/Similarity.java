@@ -70,6 +70,7 @@ public class Similarity {
 		String s857 = "micromat podlock (mac)";
 		String s607 = "microsoft word 2004 (mac)";
 		String s783 = "microsoft excel 2004 (mac)";
+		String sRand = "micromat techtool pro 4 (macs)";
 
 		System.out.println(applyDamerau(s778, s1169));
 		System.out.println(applyDamerau(s778, s1114));
@@ -78,6 +79,7 @@ public class Similarity {
 		System.out.println(applyDamerau(s778, s857));
 		System.out.println(applyDamerau(s778, s607));
 		System.out.println(applyDamerau(s778, s783));
+		System.out.println(applyDamerau(s778, sRand));
 
 		System.out.println("==============NormalizedLevenshtein=============");
 		System.out.println(applyNormalizedLevenshtein(s778, s1169));
@@ -87,6 +89,10 @@ public class Similarity {
 		System.out.println(applyNormalizedLevenshtein(s778, s857));
 		System.out.println(applyNormalizedLevenshtein(s778, s607));
 		System.out.println(applyNormalizedLevenshtein(s778, s783));
+		System.out.println(applyNormalizedLevenshtein(s778, sRand));
+		//. simply put software data eliminator
+		//. quickbooks point-of-sale pro with hardware bundle 6.0
+		
 
 		System.out.println("==============JaroWinkler Similarity Measure=============");
 		System.out.println(applyJaroWinkler(s778, s1169));
@@ -96,6 +102,8 @@ public class Similarity {
 		System.out.println(applyJaroWinkler(s778, s857));
 		System.out.println(applyJaroWinkler(s778, s607));
 		System.out.println(applyJaroWinkler(s778, s783));
+		System.out.println(applyJaroWinkler(s778, sRand));
+		
 
 		System.out.println("==============MetricLCS Similarity Measure=============");
 		System.out.println(applyMetricLCS(s778, s1169));
@@ -105,6 +113,8 @@ public class Similarity {
 		System.out.println(applyMetricLCS(s778, s857));
 		System.out.println(applyMetricLCS(s778, s607));
 		System.out.println(applyMetricLCS(s778, s783));
+		System.out.println(applyMetricLCS(s778, sRand));
+		
 
 		System.out.println("==============Jaccard Similarity Measure=============");
 		System.out.println(applyJaccard(s778, s1169));
@@ -114,6 +124,7 @@ public class Similarity {
 		System.out.println(applyJaccard(s778, s857));
 		System.out.println(applyJaccard(s778, s607));
 		System.out.println(applyJaccard(s778, s783));
+		System.out.println(applyJaccard(s778, sRand));
 	}
 
 }
