@@ -15,6 +15,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.khu.benchmark.gbench.similarity.Similarity;
+import org.khu.benchmark.gbench.util.Configuration;
 
 public class PropertyClustering {
 	// . Separators
@@ -29,7 +30,7 @@ public class PropertyClustering {
 
 	private static double GLOBAL_THRESHOLD = 0.52;
 	private static int clusterID = 0;
-	public static final String DATASET_BASE_PATH = "/home/bit-whacker/Documents/dataset/amazon_google/AmazonParts/";
+	//. public static final String DATASET_BASE_PATH = "/home/bit-whacker/Documents/dataset/amazon_google/AmazonParts/";
 	// . type property lists
 	private List<String> titleList = new ArrayList<String>();
 	private List<String> manuList = new ArrayList<String>();
@@ -322,17 +323,17 @@ public class PropertyClustering {
 		//(new ThresholdClustering()).cluster(tclusterOutPath, tList, t_threshold, Similarity.SIMILARITY_MEASURE.NormalizedLevenshtein);
 		
 		
-		String inFileName = "AmazonTitle";
-		String splitter = PropertyClustering.T_SPLITTER;
-		Similarity.SIMILARITY_MEASURE sm_type = Similarity.SIMILARITY_MEASURE.NormalizedLevenshtein;
-		double threshold = 0.6;
+		String inFileName = "AmazonDesc";
+		String splitter = PropertyClustering.D_SPLITTER;
+		Similarity.SIMILARITY_MEASURE sm_type = Similarity.SIMILARITY_MEASURE.QuadGram4;
+		double threshold = 0.7;
 		
 		
-		String inFilePath = PropertyClustering.DATASET_BASE_PATH + inFileName+".csv";
+		String inFilePath = Configuration.get("dataset.base.path") + inFileName+".csv";
 		List<String> pList = ReadToList.toPropertyList(inFilePath, splitter);
 		
 		
-		String clusterOutPath = DATASET_BASE_PATH + "clusters/tests/"+ inFileName + "_" + sm_type.toString() + "_" + threshold + ".json";
+		String clusterOutPath = Configuration.get("dataset.base.path") + "clusters/tests/"+ inFileName + "_" + sm_type.toString() + "_" + threshold + ".json";
 		
 		ThresholdClustering thresholdCluster = new ThresholdClustering();
 		Map<Integer, Integer> listClusters = thresholdCluster.cluster(pList, threshold, sm_type);
@@ -343,6 +344,8 @@ public class PropertyClustering {
 		System.err.println("ListClusterSize: " + listClusters.size());
 		System.err.println("GroupSize: " + groups.size());
 		
+		String adjacencyListFile = Configuration.get("dataset.base.path") + "clusters/tests/"+ inFileName + "_" + sm_type.toString() + "_" + threshold + ".csv";
+		thresholdCluster.writeToAdjacencyList(listClusters, adjacencyListFile);
 		System.out.println("Finished Processing!!");
 	}
 }

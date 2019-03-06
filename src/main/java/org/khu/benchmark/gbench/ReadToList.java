@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.khu.benchmark.gbench.util.Configuration;
+
 public class ReadToList {
 
 	public static List<String> toPropertyList(String propertyPath, String splitter) {
@@ -97,7 +99,7 @@ public class ReadToList {
 		//String descPath = PropertyClustering.DATASET_BASE_PATH + "AmazonDesc.csv";
 		//toPropertyList(descPath, PropertyClustering.D_SPLITTER);
 		
-		String pricePath = PropertyClustering.DATASET_BASE_PATH + "AmazonPrice.csv";
+		String pricePath = Configuration.get("dataset.base.path") + "AmazonPrice.csv";
 		toPropertyList(pricePath, PropertyClustering.P_SPLITTER);
 
 	}

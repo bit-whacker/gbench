@@ -73,7 +73,7 @@ public class ThresholdClustering {
 	 * @param Object
 	 * @param FilePath
 	 */
-	public void writeToJsonString(Object o, String oPath) {
+	public void writeToJsonString(Object o, String oPath) {    
 		ObjectMapper om = new ObjectMapper();
 		try {
 
@@ -101,5 +101,26 @@ public class ThresholdClustering {
 			((List<Integer>)groups.get(cID)).add(pID);
 		}
 		return groups;
+	}
+	
+	public void writeToAdjacencyList(Map<Integer, Integer> listCluster, String adjacencyFile){
+		try {
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(adjacencyFile));
+			for(int pID : listCluster.keySet()) {
+				int cID = listCluster.get(pID);
+				String writeFormat = pID + ",T" + cID + "\n";
+				bw.write(writeFormat);
+			}
+			
+			bw.flush();
+			bw.close();
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
