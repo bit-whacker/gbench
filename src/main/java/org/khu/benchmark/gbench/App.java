@@ -22,6 +22,8 @@ public class App {
 		} else {
 			System.out.println("Invalid String!!");
 		}
+		
+		System.out.println("The empty length: " + v.trim().length());
 		System.out.println("Finished Execution!!");
 	}
 }

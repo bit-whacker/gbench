@@ -4,10 +4,12 @@ import info.debatty.java.stringsimilarity.Damerau;
 import info.debatty.java.stringsimilarity.Jaccard;
 import info.debatty.java.stringsimilarity.JaroWinkler;
 import info.debatty.java.stringsimilarity.MetricLCS;
+import info.debatty.java.stringsimilarity.NGram;
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 
 public class Similarity {
-
+	public static enum SIMILARITY_MEASURE {Damerau, NormalizedLevenshtein, 
+			JaroWinkler, MetricLCS, Jaccard, BiGram2, QuadGram4, NumericExact};
 	/**
 	 * Good for Manufacturer and Title
 	 * 
@@ -25,7 +27,7 @@ public class Similarity {
 
 	public static double applyNormalizedLevenshtein(String s1, String s2) {
 		NormalizedLevenshtein l = new NormalizedLevenshtein();
-		return l.distance(s1, s2);
+		return l.similarity(s1, s2);
 	}
 
 	public static double applyJaroWinkler(String s1, String s2) {
@@ -42,89 +44,89 @@ public class Similarity {
 		Jaccard jc = new Jaccard();
 		return jc.similarity(s1, s2);
 	}
-
+	
+	public static double apply2Gram(String s1, String s2) {
+		NGram ngram = new NGram(2);
+		double dist = ngram.distance(s1, s2);
+		return 1-dist;
+	}
+	
+	public static double apply4Gram(String s1, String s2) {
+		NGram ngram = new NGram(4);
+		double dist = ngram.distance(s1, s2);
+		return 1-dist;
+	}
+	
+	public static double applyNumericExact(String s1, String s2) {
+		
+		if(s1 == null || s2 == null) {
+			return 0.0;
+		}
+		s1 = s1.trim();
+		s2 = s2.trim();
+		if(s1.length() == 0 || s2.length() == 0) {
+			return 0.0;
+		}
+		
+		Double d1 = Double.parseDouble(s1);
+		Double d2 = Double.parseDouble(s2);
+		
+		Double zero = 0.0;
+		if(d1.equals(zero) || d2.equals(zero)) {
+			return 0.0;
+		}
+		
+		return d1.equals(d2) ? 1.0 : 0.0;
+	}
+	
+	public static double measure(String s1, String s2, SIMILARITY_MEASURE sm) {
+		double sim = 0.0;
+		switch(sm) {
+		case BiGram2:
+			sim = apply2Gram(s1, s2);
+			break;
+		case Damerau:
+			sim = applyDamerau(s1, s2);
+			break;
+		case Jaccard:
+			sim = applyJaccard(s1, s2);
+			break;
+		case JaroWinkler:
+			sim = applyJaroWinkler(s1, s2);
+			break;
+		case MetricLCS:
+			sim = applyMetricLCS(s1, s2);
+			break;
+		case NormalizedLevenshtein:
+			sim = applyNormalizedLevenshtein(s1, s2);
+			break;
+		case QuadGram4:
+			sim = apply4Gram(s1, s2);
+			break;
+		case NumericExact:
+			sim = applyNumericExact(s1, s2);
+			break;
+		default:
+			System.err.println("Undefined similarity measure <" + sm.toString() + ">");
+			break;
+		}
+		return sim; 
+	}
 	public static void main(String[] args) {
-		/*
-		 * System.out.println(applyDamerau("ABCDEF", "ABCDEF")); // 1 substitution
-		 * System.out.println(applyDamerau("ABCDEF", "ABDCEF"));
-		 * 
-		 * // 2 substitutions System.out.println(applyDamerau("ABCDEF", "BACDFE"));
-		 * 
-		 * // 1 deletion System.out.println(applyDamerau("CDEF", "CDE"));
-		 * 
-		 * System.out.println(applyDamerau("ABCDEF", "BCDEF"));
-		 * System.out.println(applyDamerau("ABCDEF", "ABCGDEF"));
-		 * 
-		 * // All different System.out.println(applyDamerau("ABCDEF", "POMJEU"));
-		 * 
-		 * System.out.println(applyDamerau("mn", "abcde"));
-		 */
 
-		// 776: title:adobe software acrobat pro upgrd pro-pro mac (adbcd01798mc)
-		// 1167: title:chronos stickybrain 3.0 (mac)
-		String s778 = "micromat techtool pro 4 (mac)";
-		String s1169 = "micromat techtool protege with firewire device";
-		String s1114 = "railroad tycoon 3 (mac)";
-		String s646 = "microspot macdraft pe (mac)";
-		String s1207 = "micromat diskstudio ( mac)";
-		String s857 = "micromat podlock (mac)";
-		String s607 = "microsoft word 2004 (mac)";
-		String s783 = "microsoft excel 2004 (mac)";
-		String sRand = "micromat techtool pro 4 (macs)";
 
-		System.out.println(applyDamerau(s778, s1169));
-		System.out.println(applyDamerau(s778, s1114));
-		System.out.println(applyDamerau(s778, s646));
-		System.out.println(applyDamerau(s778, s1207));
-		System.out.println(applyDamerau(s778, s857));
-		System.out.println(applyDamerau(s778, s607));
-		System.out.println(applyDamerau(s778, s783));
-		System.out.println(applyDamerau(s778, sRand));
-
-		System.out.println("==============NormalizedLevenshtein=============");
-		System.out.println(applyNormalizedLevenshtein(s778, s1169));
-		System.out.println(applyNormalizedLevenshtein(s778, s1114));
-		System.out.println(applyNormalizedLevenshtein(s778, s646));
-		System.out.println(applyNormalizedLevenshtein(s778, s1207));
-		System.out.println(applyNormalizedLevenshtein(s778, s857));
-		System.out.println(applyNormalizedLevenshtein(s778, s607));
-		System.out.println(applyNormalizedLevenshtein(s778, s783));
-		System.out.println(applyNormalizedLevenshtein(s778, sRand));
-		//. simply put software data eliminator
-		//. quickbooks point-of-sale pro with hardware bundle 6.0
-		
-
-		System.out.println("==============JaroWinkler Similarity Measure=============");
-		System.out.println(applyJaroWinkler(s778, s1169));
-		System.out.println(applyJaroWinkler(s778, s1114));
-		System.out.println(applyJaroWinkler(s778, s646));
-		System.out.println(applyJaroWinkler(s778, s1207));
-		System.out.println(applyJaroWinkler(s778, s857));
-		System.out.println(applyJaroWinkler(s778, s607));
-		System.out.println(applyJaroWinkler(s778, s783));
-		System.out.println(applyJaroWinkler(s778, sRand));
-		
-
-		System.out.println("==============MetricLCS Similarity Measure=============");
-		System.out.println(applyMetricLCS(s778, s1169));
-		System.out.println(applyMetricLCS(s778, s1114));
-		System.out.println(applyMetricLCS(s778, s646));
-		System.out.println(applyMetricLCS(s778, s1207));
-		System.out.println(applyMetricLCS(s778, s857));
-		System.out.println(applyMetricLCS(s778, s607));
-		System.out.println(applyMetricLCS(s778, s783));
-		System.out.println(applyMetricLCS(s778, sRand));
-		
-
-		System.out.println("==============Jaccard Similarity Measure=============");
-		System.out.println(applyJaccard(s778, s1169));
-		System.out.println(applyJaccard(s778, s1114));
-		System.out.println(applyJaccard(s778, s646));
-		System.out.println(applyJaccard(s778, s1207));
-		System.out.println(applyJaccard(s778, s857));
-		System.out.println(applyJaccard(s778, s607));
-		System.out.println(applyJaccard(s778, s783));
-		System.out.println(applyJaccard(s778, sRand));
+	    String s26 = "data protection suite";
+	    String s312 = "instant architect design suite";
+	    String s384 = "adobe production studio premium";
+	    String s992 = "power production storyboard artist 4";
+	    String s1133 = "power production storyboard quick";
+	    
+	    
+		System.out.println("==============Apply NormalizedLevinstein=============");
+		System.out.println(Similarity.measure(s26, s312, SIMILARITY_MEASURE.NormalizedLevenshtein));
+		System.out.println(Similarity.measure(s384, s1133, SIMILARITY_MEASURE.NormalizedLevenshtein));
+		System.out.println(Similarity.measure(s992, s1133, SIMILARITY_MEASURE.NormalizedLevenshtein));
+        
 	}
 
 }
