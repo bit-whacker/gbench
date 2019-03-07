@@ -32,6 +32,7 @@ public class ThresholdClustering {
 		for (int row = 1; row < propertyList.size(); row++) {
 			double maxSim = 0.0;
 			int maxPID = 0;
+			System.err.println("Matching: " + row);
 			for (int col = 0; col < row; col++) {
 				double sim = Similarity.measure(propertyList.get(row), propertyList.get(col), sm);
 				if (sim > maxSim) {
